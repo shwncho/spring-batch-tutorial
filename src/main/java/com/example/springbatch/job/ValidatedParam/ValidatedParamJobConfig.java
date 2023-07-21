@@ -28,44 +28,44 @@ import java.util.List;
 @Configuration
 public class ValidatedParamJobConfig {
 
-    @Bean
-    public Job validatedParamJob(JobRepository jobRepository, Step step){
-        System.out.println("job");
-        return new JobBuilder("validatedParamJob", jobRepository)
-                .incrementer(new RunIdIncrementer())
-//                .validator(new FileParamValidator())
-                .validator(multipleValidator())
-                .start(step)
-                .build();
-    }
-
-    private CompositeJobParametersValidator multipleValidator(){
-        CompositeJobParametersValidator validator = new CompositeJobParametersValidator();
-        validator.setValidators(List.of(new FileParamValidator()));
-
-        return validator;
-    }
-
-    @JobScope
-    @Bean
-    public Step validatedParamStep(JobRepository jobRepository, Tasklet tasklet, PlatformTransactionManager transactionManager) {
-        System.out.println("step");
-        return new StepBuilder("validatedParamStep", jobRepository)
-                .tasklet(tasklet, transactionManager)
-                .build();
-    }
-
-    @StepScope
-    @Bean
-    public Tasklet validatedParamTasklet(@Value("#{jobParameters['fileName']}") String fileName){
-        return new Tasklet() {
-            @Override
-            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                System.out.println(fileName);
-                System.out.println("validated Param Tasklet");
-                return RepeatStatus.FINISHED;
-            }
-        };
-    }
+//    @Bean
+//    public Job validatedParamJob(JobRepository jobRepository, Step step){
+//        System.out.println("job");
+//        return new JobBuilder("validatedParamJob", jobRepository)
+//                .incrementer(new RunIdIncrementer())
+////                .validator(new FileParamValidator())
+//                .validator(multipleValidator())
+//                .start(step)
+//                .build();
+//    }
+//
+//    private CompositeJobParametersValidator multipleValidator(){
+//        CompositeJobParametersValidator validator = new CompositeJobParametersValidator();
+//        validator.setValidators(List.of(new FileParamValidator()));
+//
+//        return validator;
+//    }
+//
+//    @JobScope
+//    @Bean
+//    public Step validatedParamStep(JobRepository jobRepository, Tasklet tasklet, PlatformTransactionManager transactionManager) {
+//        System.out.println("step");
+//        return new StepBuilder("validatedParamStep", jobRepository)
+//                .tasklet(tasklet, transactionManager)
+//                .build();
+//    }
+//
+//    @StepScope
+//    @Bean
+//    public Tasklet validatedParamTasklet(@Value("#{jobParameters['fileName']}") String fileName){
+//        return new Tasklet() {
+//            @Override
+//            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+//                System.out.println(fileName);
+//                System.out.println("validated Param Tasklet");
+//                return RepeatStatus.FINISHED;
+//            }
+//        };
+//    }
 
 }
