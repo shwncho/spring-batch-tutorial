@@ -32,70 +32,70 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class TrMigrationJobConfig {
 
-    private final OrdersRepository ordersRepository;
-    private final AccountsRepository accountsRepository;
-
-    @Bean
-    public Job trMigrationJob(JobRepository jobRepository, Step step){
-        return new JobBuilder("trMigrationJob", jobRepository)
-                .incrementer(new RunIdIncrementer())
-                .start(step)
-                .build();
-    }
-
-    @Bean
-    @JobScope
-    public Step trMigrationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager){
-        return new StepBuilder("trMigrationStep", jobRepository)
-                .<Orders, Accounts>chunk(5, transactionManager)
-                .reader(trOrdersReader())
-//                .writer(chunk -> chunk.forEach(System.out::println))
-                .processor(trOrderProcessor())
-                .writer(trOrderWriter())
-                .build();
-    }
-
-    @Bean
-    @StepScope
-    public RepositoryItemWriter<Accounts> trOrderWriter(){
-        return new RepositoryItemWriterBuilder<Accounts>()
-                .repository(accountsRepository)
-                .methodName("save")
-                .build();
-    }
-
-    //ItemWriter를 사용하면 repository를 직접 불러와 본인이 로직 작성
+//    private final OrdersRepository ordersRepository;
+//    private final AccountsRepository accountsRepository;
+//
+//    @Bean
+//    public Job trMigrationJob(JobRepository jobRepository, Step step){
+//        return new JobBuilder("trMigrationJob", jobRepository)
+//                .incrementer(new RunIdIncrementer())
+//                .start(step)
+//                .build();
+//    }
+//
+//    @Bean
+//    @JobScope
+//    public Step trMigrationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager){
+//        return new StepBuilder("trMigrationStep", jobRepository)
+//                .<Orders, Accounts>chunk(5, transactionManager)
+//                .reader(trOrdersReader())
+////                .writer(chunk -> chunk.forEach(System.out::println))
+//                .processor(trOrderProcessor())
+//                .writer(trOrderWriter())
+//                .build();
+//    }
+//
 //    @Bean
 //    @StepScope
-//    public ItemWriter<Accounts> trOrderWriter(){
-//        return new ItemWriter<Accounts>() {
+//    public RepositoryItemWriter<Accounts> trOrderWriter(){
+//        return new RepositoryItemWriterBuilder<Accounts>()
+//                .repository(accountsRepository)
+//                .methodName("save")
+//                .build();
+//    }
+//
+//    //ItemWriter를 사용하면 repository를 직접 불러와 본인이 로직 작성
+////    @Bean
+////    @StepScope
+////    public ItemWriter<Accounts> trOrderWriter(){
+////        return new ItemWriter<Accounts>() {
+////            @Override
+////            public void write(Chunk<? extends Accounts> chunk) throws Exception {
+////                chunk.forEach(accountsRepository::save);
+////            }
+////        };
+////    }
+//    @Bean
+//    @StepScope
+//    public ItemProcessor<Orders, Accounts> trOrderProcessor(){
+//        return new ItemProcessor<Orders, Accounts>() {
 //            @Override
-//            public void write(Chunk<? extends Accounts> chunk) throws Exception {
-//                chunk.forEach(accountsRepository::save);
+//            public Accounts process(Orders item) throws Exception {
+//                return new Accounts(item);
 //            }
 //        };
 //    }
-    @Bean
-    @StepScope
-    public ItemProcessor<Orders, Accounts> trOrderProcessor(){
-        return new ItemProcessor<Orders, Accounts>() {
-            @Override
-            public Accounts process(Orders item) throws Exception {
-                return new Accounts(item);
-            }
-        };
-    }
-
-    @Bean
-    @StepScope
-    public RepositoryItemReader<Orders> trOrdersReader(){
-        return new RepositoryItemReaderBuilder<Orders>()
-                .name("trOrdersReader")
-                .repository(ordersRepository)
-                .methodName("findAll")
-                .pageSize(5)
-                .arguments(Arrays.asList())
-                .sorts(Collections.singletonMap("id", Sort.Direction.ASC))
-                .build();
-    }
+//
+//    @Bean
+//    @StepScope
+//    public RepositoryItemReader<Orders> trOrdersReader(){
+//        return new RepositoryItemReaderBuilder<Orders>()
+//                .name("trOrdersReader")
+//                .repository(ordersRepository)
+//                .methodName("findAll")
+//                .pageSize(5)
+//                .arguments(Arrays.asList())
+//                .sorts(Collections.singletonMap("id", Sort.Direction.ASC))
+//                .build();
+//    }
 }
