@@ -1,6 +1,5 @@
 package com.example.springbatch.job.HelloWorld;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -15,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-@Configuration()
+@Configuration
 public class HelloWorldJobConfig {
 
 //    @Bean

@@ -20,78 +20,78 @@ import org.springframework.transaction.PlatformTransactionManager;
 @RequiredArgsConstructor
 public class ConditionalStepConfig {
 
-    private final JobRepository jobRepository;
-    private final PlatformTransactionManager transactionManager;
-
-    @Bean
-    public Job conditionalStepJob(){
-        return new JobBuilder("conditionalStepJob", jobRepository)
-                .incrementer(new RunIdIncrementer())
-                .start(conditionalStartStep())
-                .on("FAILED").to(conditionalFailStep())
-                .from(conditionalStartStep())
-                .on("COMPLETED").to(conditionalCompletedStep())
-                .from(conditionalStartStep())
-                .on("*").to(conditionalAllStep())
-                .end()
-                .build();
-
-    }
-
-    @Bean
-    @JobScope
-    public Step conditionalStartStep(){
-        return new StepBuilder("conditionalStartStep", jobRepository)
-                .tasklet(new Tasklet() {
-                    @Override
-                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                        System.out.println("conditional Start Step");
-                        return RepeatStatus.FINISHED;
-                        //throw new Exception("Exception!!");
-                    }
-                },transactionManager)
-                .build();
-    }
-
-    @Bean
-    @JobScope
-    public Step conditionalAllStep(){
-        return new StepBuilder("conditionalAllStep", jobRepository)
-                .tasklet(new Tasklet() {
-                    @Override
-                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                        System.out.println("conditional All Step");
-                        return RepeatStatus.FINISHED;
-                    }
-                },transactionManager)
-                .build();
-    }
-
-    @Bean
-    @JobScope
-    public Step conditionalFailStep() {
-        return new StepBuilder("conditionalFailStep", jobRepository)
-                .tasklet(new Tasklet() {
-                    @Override
-                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                        System.out.println("conditional Fail Step");
-                        return RepeatStatus.FINISHED;
-                    }
-                },transactionManager)
-                .build();
-    }
-
-    @Bean
-    @JobScope
-    public Step conditionalCompletedStep() {
-        return new StepBuilder("conditionalCompletedStep", jobRepository)
-                .tasklet(new Tasklet() {
-                    @Override
-                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                        System.out.println("conditional Completed Step");
-                        return RepeatStatus.FINISHED;
-                    }
-                },transactionManager)
-                .build();
-    }
+//    private final JobRepository jobRepository;
+//    private final PlatformTransactionManager transactionManager;
+//
+//    @Bean
+//    public Job conditionalStepJob(){
+//        return new JobBuilder("conditionalStepJob", jobRepository)
+//                .incrementer(new RunIdIncrementer())
+//                .start(conditionalStartStep())
+//                .on("FAILED").to(conditionalFailStep())
+//                .from(conditionalStartStep())
+//                .on("COMPLETED").to(conditionalCompletedStep())
+//                .from(conditionalStartStep())
+//                .on("*").to(conditionalAllStep())
+//                .end()
+//                .build();
+//
+//    }
+//
+//    @Bean
+//    @JobScope
+//    public Step conditionalStartStep(){
+//        return new StepBuilder("conditionalStartStep", jobRepository)
+//                .tasklet(new Tasklet() {
+//                    @Override
+//                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+//                        System.out.println("conditional Start Step");
+//                        return RepeatStatus.FINISHED;
+//                        //throw new Exception("Exception!!");
+//                    }
+//                },transactionManager)
+//                .build();
+//    }
+//
+//    @Bean
+//    @JobScope
+//    public Step conditionalAllStep(){
+//        return new StepBuilder("conditionalAllStep", jobRepository)
+//                .tasklet(new Tasklet() {
+//                    @Override
+//                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+//                        System.out.println("conditional All Step");
+//                        return RepeatStatus.FINISHED;
+//                    }
+//                },transactionManager)
+//                .build();
+//    }
+//
+//    @Bean
+//    @JobScope
+//    public Step conditionalFailStep() {
+//        return new StepBuilder("conditionalFailStep", jobRepository)
+//                .tasklet(new Tasklet() {
+//                    @Override
+//                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+//                        System.out.println("conditional Fail Step");
+//                        return RepeatStatus.FINISHED;
+//                    }
+//                },transactionManager)
+//                .build();
+//    }
+//
+//    @Bean
+//    @JobScope
+//    public Step conditionalCompletedStep() {
+//        return new StepBuilder("conditionalCompletedStep", jobRepository)
+//                .tasklet(new Tasklet() {
+//                    @Override
+//                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+//                        System.out.println("conditional Completed Step");
+//                        return RepeatStatus.FINISHED;
+//                    }
+//                },transactionManager)
+//                .build();
+//    }
 }
